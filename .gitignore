@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode
+.buildpath
+.project
+.settings/
+.build/
+.idea/
+nbproject/
