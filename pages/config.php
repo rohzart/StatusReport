@@ -26,10 +26,10 @@ print_manage_menu();
 
 <tr>
 	<td class="category" width="60%">
-		<?php echo lang_get( 'StatusReport_hourly_rate' ) ?>
+		<?php echo lang_get( 'StatusReport_default_hourly_rate' ) ?>
 	</td>
 		<td  width="20%">
-			<input type="text" name="StatusReport_hourly_rate" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_hourly_rate' )?>" >
+			<input type="text" name="StatusReport_default_hourly_rate" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_default_hourly_rate' )?>" >
 	</td>
 	</td><td>
 </tr>
