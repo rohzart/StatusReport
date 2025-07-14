@@ -1,38 +1,43 @@
 <?php
-function get_monthly_time_report($hourly_rate) {
-	$start_date = date('Y-m-01 00:00:00');
-	$end_date = date('Y-m-t 23:59:59');
+function get_project_hourly_rate($project_id, $default_rate) {
+    $project_rates = plugin_config_get('StatusReport_project_hourly_rates');
+    return isset($project_rates[$project_id]) ? $project_rates[$project_id] : $default_rate;
+}
 
-	$query = "SELECT 
-					p.id AS project_id,
-					p.name AS project_name,
-					ROUND(SUM(bn.time_tracking) / 60, 2) AS total_hours,
-					ROUND((SUM(bn.time_tracking) / 60) * " . db_param() . ", 2) AS cost
-				FROM 
-					bugnote bn
-				JOIN 
-					bug b ON bn.bug_id = b.id
-				JOIN 
-					project p ON b.project_id = p.id
-				WHERE 
-					bn.time_tracking > 0
-					AND FROM_UNIXTIME(bn.last_modified) BETWEEN " . db_param() . " AND " . db_param() . "
-				GROUP BY 
-					p.name;";
+function get_monthly_time_report($default_hourly_rate) {
+    $start_date = date('Y-m-01 00:00:00');
+    $end_date = date('Y-m-t 23:59:59');
 
-	$result = db_query($query, array($hourly_rate, $start_date, $end_date));
+    $query = "SELECT 
+                p.id AS project_id,
+                p.name AS project_name,
+                ROUND(SUM(bn.time_tracking) / 60, 4) AS total_hours
+            FROM 
+                bugnote bn
+            JOIN 
+                bug b ON bn.bug_id = b.id
+            JOIN 
+                project p ON b.project_id = p.id
+            WHERE 
+                bn.time_tracking > 0
+                AND FROM_UNIXTIME(bn.last_modified) BETWEEN " . db_param() . " AND " . db_param() . "
+            GROUP BY 
+                p.id, p.name;";
 
-	$report = [];
-	while ($row = db_fetch_array($result)) {
-		$report[] = [
-			'project_id' => $row['project_id'],
-			'project_name' => $row['project_name'],
-			'total_hours' => $row['total_hours'],
-			'cost' => $row['cost']
-		];
-	}
+    $result = db_query($query, array($start_date, $end_date));
 
-	return $report;
+    $report = [];
+    while ($row = db_fetch_array($result)) {
+        $hourly_rate = get_project_hourly_rate($row['project_id'], $default_hourly_rate);
+        $report[] = [
+            'project_id' => $row['project_id'],
+            'project_name' => $row['project_name'],
+            'total_hours' => $row['total_hours'],
+            'cost' => round($row['total_hours'] * $hourly_rate, 2)
+        ];
+    }
+
+    return $report;
 }
 
 function send_monthly_report_email($email, $report) {

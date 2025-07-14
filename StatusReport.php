@@ -25,7 +25,8 @@ class StatusReportPlugin extends MantisPlugin {
 	/*** Default plugin configuration.	 */
 	function config() {
 		return array(
-			'StatusReport_default_hourly_rate'				=> 0,
+			'StatusReport_default_hourly_rate'		=> 0,
+			'StatusReport_project_hourly_rates' 	=> array(),
 			'StatusReport_days_to_send_csv'			=> '',
 			'StatusReport_admin_email'				=> '',
 			'StatusReport_ignore_project_ids_csv'	=> ''

@@ -33,7 +33,25 @@ print_manage_menu();
 	</td>
 	</td><td>
 </tr>
-
+<tr>
+    <td class="category" width="60%">
+        <?php echo lang_get( 'StatusReport_project_hourly_rates' ) ?>
+    </td>
+    <td width="20%">
+        <?php
+        $projects = project_get_all_rows();
+        foreach ($projects as $project) {
+            $project_rates = plugin_config_get('StatusReport_project_hourly_rates');
+            $rate = isset($project_rates[$project['id']]) ? $project_rates[$project['id']] : '';
+            echo '<div class="project-rate">';
+            echo '<label>' . $project['name'] . ':</label> ';
+            echo '<input type="text" name="project_rate_' . $project['id'] . '" size="10" value="' . $rate . '">';
+            echo '</div>';
+        }
+        ?>
+    </td>
+    <td></td>
+</tr>
 <tr>
 	<td class="category" width="60%">
 		<?php echo lang_get( 'StatusReport_days_to_send_csv' ) ?>
