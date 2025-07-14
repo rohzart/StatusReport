@@ -11,6 +11,17 @@ class StatusReportPlugin extends MantisPlugin {
 		$this->page        = 'config';
 	}
 
+	/*** prefer setting up the access level manually in case the enum value is already configured/taken. */
+	// function install() {
+    //     $enum = config_get_global('access_levels_enum_string');
+    //     if (strpos($enum, 'stakeholder') === false) {
+    //         $enum .= ',35:stakeholder';
+    //         config_set_global('access_levels_enum_string', $enum);
+	// 		config_set_global('view_bug_threshold', array(10, 25, 35));
+	// 		config_set_global('report_bug_threshold', array(25, 35));
+    //     }
+    // }
+
 	/*** Default plugin configuration.	 */
 	function config() {
 		return array(
@@ -27,12 +38,13 @@ class StatusReportPlugin extends MantisPlugin {
         );
     }
 
+	/*** When logged in, only the managers will see the menu item */
 	function menu() {
         $t_menu[] = array(
             'title' => $this->name,
             'url' => plugin_page( 'status_report' ),
             'access_level' => MANAGER,
-            'icon' => 'fa-smile-o'
+            'icon' => 'fa-money'
         );
         return $t_menu;
     }

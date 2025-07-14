@@ -13,5 +13,5 @@ $email = config_get('plugin_StatusReport_StatusReport_admin_email');
 
 $report = get_monthly_time_report($hourly_rate);
 
-send_monthly_report_email_to_managers($report);
+send_monthly_report_email_to_stakeholders($report);
 send_monthly_report_email($email, $report);

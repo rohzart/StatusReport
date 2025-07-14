@@ -53,7 +53,7 @@ function send_monthly_report_email($email, $report) {
 	}
 }
 
-function send_monthly_report_email_to_managers($report) {
+function send_monthly_report_email_to_stakeholders($report) {
 	if($report === null || empty($report)) {
 		return;
 	}
@@ -61,12 +61,12 @@ function send_monthly_report_email_to_managers($report) {
 	foreach ($report as $entry) {
 		$t_project_id = $entry['project_id'];
 
-		// Get all users with MANAGER access (or higher) for this project
-		$t_managers = project_get_all_user_rows($t_project_id, MANAGER);
+		// Get all users with STAKEHOLDER access (or higher) for this project
+		$t_stakeholders = project_get_all_user_rows($t_project_id, STAKEHOLDER);
 
-		foreach ($t_managers as $manager) {
-			$t_username = user_get_name($manager['id']);
-			$t_email = user_get_email($manager['id']);
+		foreach ($t_stakeholders as $stakeholder) {
+			$t_username = user_get_name($stakeholder['id']);
+			$t_email = user_get_email($stakeholder['id']);
 			$t_subject = "Monthly Time Report - {$entry['project_name']}";
 
 			$body = "Hello {$t_username},\n\n";
