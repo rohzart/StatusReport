@@ -36,6 +36,7 @@ class StatusReportPlugin extends MantisPlugin {
 	function hooks() {
         return array(
             'EVENT_MENU_MAIN' => 'menu',
+			'EVENT_CRONJOB' => 'cronjob'
         );
     }
 
@@ -52,6 +53,14 @@ class StatusReportPlugin extends MantisPlugin {
 
 	function reportDownload() {
 		return array('<a href="'. plugin_page( 'status_report.php' ) . '">' . lang_get( 'StatusReport_download' ) . '</a>' );
+	}
+
+	function cronjob() {
+		return array(
+			'cronjob' => 'status_report_cron.php',
+			'frequency' => 'daily',
+			'description' => lang_get( 'StatusReport_cronjob_desc' )
+		);
 	}
 
 }
