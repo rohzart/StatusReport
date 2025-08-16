@@ -2,8 +2,7 @@
 
 require_once(dirname( __FILE__, 2 ) . DIRECTORY_SEPARATOR . 'core/status_report_api.php');
 
-$hourly_rate = config_get('plugin_StatusReport_StatusReport_default_hourly_rate');
-$report = get_monthly_time_report($hourly_rate);
+$report = get_monthly_time_report();
 
 $t_separator = ',';
 

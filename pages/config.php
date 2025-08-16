@@ -35,7 +35,7 @@ print_manage_menu();
 </tr>
 <tr>
     <td class="category" width="60%">
-        <?php echo lang_get( 'StatusReport_project_hourly_rates' ) ?>
+        <?php echo lang_get( 'StatusReport_project_hourly_rates_and_last_billed_dates' ) ?>
     </td>
     <td width="20%">
         <?php
@@ -43,9 +43,14 @@ print_manage_menu();
         foreach ($projects as $project) {
             $project_rates = plugin_config_get('StatusReport_project_hourly_rates');
             $rate = isset($project_rates[$project['id']]) ? $project_rates[$project['id']] : '';
-            echo '<div class="project-rate">';
+
+            $project_last_billed_dates = plugin_config_get('StatusReport_project_last_billed_dates');
+            $billed_date = isset($project_last_billed_dates[$project['id']]) ? $project_last_billed_dates[$project['id']] : '';
+            
+			echo '<div class="project-rate">';
             echo '<label>' . $project['name'] . ':</label> ';
             echo '<input type="text" name="project_rate_' . $project['id'] . '" size="10" value="' . $rate . '">';
+			echo '<input type="date" name="project_last_billed_date_' . $project['id'] . '" size="10" value="' . $billed_date . '">';
             echo '</div>';
         }
         ?>

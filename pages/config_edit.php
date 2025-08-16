@@ -14,13 +14,22 @@ plugin_config_set('StatusReport_admin_email'		        , $f_StatusReport_admin_em
 plugin_config_set('StatusReport_ignore_project_ids_csv'		, $f_StatusReport_ignore_project_ids_csv);
 
 $project_rates = array();
+$project_last_billed_dates = array();
+
 $projects = project_get_all_rows();
 foreach ($projects as $project) {
     $rate = gpc_get_string('project_rate_' . $project['id'], '');
     if (!empty($rate)) {
         $project_rates[$project['id']] = (float)$rate;
     }
+
+    $billed_date = gpc_get_string('project_last_billed_date_' . $project['id'], '');
+    if (!empty($billed_date)) {
+        $project_last_billed_dates[$project['id']] = $project_last_billed_dates;
+    }
 }
+
 plugin_config_set('StatusReport_project_hourly_rates', $project_rates);
+plugin_config_set('StatusReport_project_last_billed_dates', $project_last_billed_dates);
 
 print_header_redirect( plugin_page( 'config', TRUE ) );
