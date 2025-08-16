@@ -4,19 +4,22 @@ function get_project_hourly_rate($project_id, $default_rate) {
     return isset($project_rates[$project_id]) ? $project_rates[$project_id] : $default_rate;
 }
 
+function get_project_last_billed_date($project_id, $default_start_date) {
+    $project_last_billed_dates = plugin_config_get('StatusReport_project_last_billed_dates');
+    return isset($project_last_billed_dates[$project_id]) ? date('Y-m-d', strtotime($project_last_billed_dates[$project_id])) : $default_start_date;
+}
+
 function get_monthly_time_report() {
     $report = [];
 
     $default_hourly_rate = config_get('plugin_StatusReport_StatusReport_default_hourly_rate');
+    $default_start_date = date('Y-m-01 00:00:00');
     $projects = project_get_all_rows();
+
     foreach ($projects as $project) {
-        $project_last_billed_dates = plugin_config_get('StatusReport_project_last_billed_dates');
-        $billed_date = isset($project_last_billed_dates[$project['id']]) ? $project_last_billed_dates[$project['id']] : '';
-        if (!empty($billed_date)) {
-            $start_date = date('Y-m-d', strtotime($billed_date));
-        } else {
-            $start_date = date('Y-m-01 00:00:00');
-        }
+
+        $hourly_rate = get_project_hourly_rate($project['id'], $default_hourly_rate);
+        $start_date = get_project_last_billed_date($project['id'], $default_start_date);
         $end_date = date('Y-m-t 23:59:59');
 
         $query = "SELECT 
@@ -31,25 +34,20 @@ function get_monthly_time_report() {
                 project p ON b.project_id = p.id
             WHERE 
                 bn.time_tracking > 0
-                AND FROM_UNIXTIME(bn.last_modified) BETWEEN " . db_param() . " AND " . db_param() . "
-                AND p.id = " . db_param() . "
-            GROUP BY 
-                p.id, p.name;";
+                AND FROM_UNIXTIME(bn.last_modified) BETWEEN " . db_param() . " AND " . db_param() . " AND p.id = " . db_param();
 
         $result = db_query($query, array($start_date, $end_date, $project['id']));
 
         while ($row = db_fetch_array($result)) {
-            $hourly_rate = get_project_hourly_rate($row['project_id'], $default_hourly_rate);
-            $report[] = [
+            array_push($report, [
                 'project_id' => $row['project_id'],
                 'project_name' => $row['project_name'],
                 'total_hours' => $row['total_hours'],
                 'cost' => round($row['total_hours'] * $hourly_rate, 2)
-            ];
+            ]);
         }
-
-        return $report;
     }
+    return $report;
 }
 
 function send_monthly_report_email($email, $report) {
