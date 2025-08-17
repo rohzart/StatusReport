@@ -42,7 +42,10 @@ function get_monthly_time_report() {
             array_push($report, [
                 'project_id' => $row['project_id'],
                 'project_name' => $row['project_name'],
+                'start_date' => $start_date,
+                'end_date' => $end_date,
                 'total_hours' => $row['total_hours'],
+                'hourly_rate' => $hourly_rate,
                 'cost' => round($row['total_hours'] * $hourly_rate, 2)
             ]);
         }
