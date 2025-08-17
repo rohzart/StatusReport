@@ -25,7 +25,7 @@ foreach ($projects as $project) {
 
     $billed_date = gpc_get_string('project_last_billed_date_' . $project['id'], '');
     if (!empty($billed_date)) {
-        $project_last_billed_dates[$project['id']] = $project_last_billed_dates;
+        $project_last_billed_dates[$project['id']] = $billed_date;
     }
 }
 
