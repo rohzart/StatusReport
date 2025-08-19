@@ -2,7 +2,7 @@
 
 require_once(dirname( __FILE__, 2 ) . DIRECTORY_SEPARATOR . 'core/status_report_api.php');
 
-$report = get_monthly_time_report();
+$report = get_report();
 
 $t_separator = ',';
 

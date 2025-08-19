@@ -10,7 +10,7 @@ require_once(dirname( __FILE__, 2 ) . DIRECTORY_SEPARATOR . 'core/status_report_
 
 $email = config_get('plugin_StatusReport_StatusReport_admin_email');
 
-$report = get_monthly_time_report();
+$report = get_report();
 
-send_monthly_report_email_to_stakeholders($report);
-send_monthly_report_email($email, $report);
+email_report_to_stakeholders($report);
+email_report($email, $report);

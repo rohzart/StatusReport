@@ -6,7 +6,7 @@ access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
 layout_page_header( lang_get( 'StatusReport_plugin_title' ) );
 layout_page_begin( 'status_report.php' );
 
-$report = get_monthly_time_report();
+$report = get_report();
 ?>
 
 <div class="col-md-12 col-xs-12">

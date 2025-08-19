@@ -9,7 +9,7 @@ function get_project_last_billed_date($project_id, $default_start_date) {
     return isset($project_last_billed_dates[$project_id]) ? date('Y-m-d', strtotime($project_last_billed_dates[$project_id])) : $default_start_date;
 }
 
-function get_monthly_time_report() {
+function get_report() {
     $report = [];
 
     $default_hourly_rate = config_get('plugin_StatusReport_StatusReport_default_hourly_rate');
@@ -53,7 +53,7 @@ function get_monthly_time_report() {
     return $report;
 }
 
-function send_monthly_report_email($email, $report) {
+function email_report($email, $report) {
 	if($report === null || empty($report)) {
 		return;
 	}
@@ -71,7 +71,7 @@ function send_monthly_report_email($email, $report) {
 	}
 }
 
-function send_monthly_report_email_to_stakeholders($report) {
+function email_report_to_stakeholders($report) {
 	if($report === null || empty($report)) {
 		return;
 	}

@@ -8,7 +8,7 @@ print_manage_menu();
 ?>
 <div class="col-md-12 col-xs-12">
 <div class="space-10"></div>
-<div class="form-container" > 
+<div class="form-container"> 
 <br/>
 <form action="<?php echo plugin_page( 'config_edit' ) ?>" method="post">
 <?php echo form_security_field( 'plugin_format_config_edit' ) ?>
@@ -25,19 +25,19 @@ print_manage_menu();
 <table class="table table-bordered table-condensed table-striped"> 
 
 <tr>
-	<td class="category" width="60%">
+	<td class="category">
 		<?php echo lang_get( 'StatusReport_default_hourly_rate' ) ?>
 	</td>
-		<td  width="20%">
-			<input type="text" name="StatusReport_default_hourly_rate" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_default_hourly_rate' )?>" >
+		<td>
+			<input type="text" name="StatusReport_default_hourly_rate" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_default_hourly_rate' )?>">
 	</td>
 	</td><td>
 </tr>
 <tr>
-    <td class="category" width="60%">
+    <td class="category">
         <?php echo lang_get( 'StatusReport_project_hourly_rates_and_last_billed_dates' ) ?>
     </td>
-    <td width="20%">
+    <td>
         <?php
         $projects = project_get_all_rows();
         foreach ($projects as $project) {
@@ -58,31 +58,31 @@ print_manage_menu();
     <td></td>
 </tr>
 <tr>
-	<td class="category" width="60%">
-		<?php echo lang_get( 'StatusReport_days_to_send_csv' ) ?>
+	<td class="category">
+		<?php echo lang_get( 'StatusReport_dates_to_send_csv' ) ?>
 	</td>
-		<td  width="20%">
-			<input type="text" name="StatusReport_days_to_send_csv" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_days_to_send_csv' )?>" >
+		<td>
+			<input type="text" name="StatusReport_dates_to_send_csv" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_dates_to_send_csv' )?>">
 	</td>
 	</td><td>
 </tr>
 
 <tr>
-	<td class="category" width="60%">
+	<td class="category">
 		<?php echo lang_get( 'StatusReport_admin_email' ) ?>
 	</td>
-		<td  width="20%">
-			<input type="text" name="StatusReport_admin_email" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_admin_email' )?>" >
+		<td>
+			<input type="text" name="StatusReport_admin_email" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_admin_email' )?>">
 	</td>
 	</td><td>
 </tr>
 
 <tr>
-	<td class="category" width="60%">
+	<td class="category">
 		<?php echo lang_get( 'StatusReport_ignore_project_ids_csv' ) ?>
 	</td>
-		<td  width="20%">
-			<input type="text" name="StatusReport_ignore_project_ids_csv" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_ignore_project_ids_csv' )?>" >
+		<td>
+			<input type="text" name="StatusReport_ignore_project_ids_csv" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_ignore_project_ids_csv' )?>">
 	</td>
 	</td><td>
 </tr>

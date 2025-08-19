@@ -6,7 +6,7 @@ $s_StatusReport_plugin_desc 			= 'Email regular status reports.';
 
 $s_StatusReport_default_hourly_rate     = 'Default Hourly Rate';
 $s_StatusReport_project_hourly_rates_and_last_billed_dates    = 'Hourly Rate and Last Billed Date per Project';
-$s_StatusReport_days_to_send_csv        = 'Days of the month to send reports (csv)';
+$s_StatusReport_dates_to_send_csv        = 'Days of the month to send reports (csv)';
 $s_StatusReport_ignore_project_ids_csv  = 'Ignore project ids (csv)';
 $s_StatusReport_admin_email             = 'AdminEmail';
 
