@@ -45,7 +45,7 @@ function get_report() {
                     'project_name' => $row['project_name'],
                     'start_date' => $start_date,
                     'end_date' => $end_date,
-                    'total_hours' => $row['total_hours'],
+                    'total_hours' => $row['total_hours'] ?? 0,
                     'hourly_rate' => $hourly_rate,
                     'cost' => round($row['total_hours'] * $hourly_rate, 2)
                 ]);
@@ -74,7 +74,7 @@ function email_report_to_admin($report) {
 
     foreach ($report as $entry) {
         // Replace placeholders with actual data
-        $report_section = str_replace(
+        $report_section .= str_replace(
             ['{project_name}', '{start_date}', '{end_date}', '{total_hours}', '{hourly_rate}', '{cost}', '{sender_name}'],
             [$entry['project_name'], date('F d, Y', strtotime($entry['start_date'])), date('F d, Y', strtotime($entry['end_date'])), $entry['total_hours'], $entry['hourly_rate'], '$' . number_format($entry['cost'], 2), 'Stakeholder Name'],
             $template_report_section_content
@@ -104,7 +104,7 @@ function email_report_to_stakeholders($report) {
 
 		foreach ($t_stakeholders as $stakeholder) {
             // confirm the user has only stakeholder access
-            if (access_get_global_level($stakeholder['id']) <= STAKEHOLDER) {
+            // if (access_get_global_level($stakeholder['id']) < STAKEHOLDER) {
                 $t_username = user_get_name($stakeholder['id']);
                 $t_email = user_get_email($stakeholder['id']);
                 $t_project_name = $entry['project_name'];
@@ -126,7 +126,7 @@ function email_report_to_stakeholders($report) {
                 // email_store($t_email, $t_subject, $body);
                 $email = plugin_config_get('StatusReport_admin_email');
                 email_store($email, $t_subject, $body);
-            }
+            // }
 		}
 	}
 	email_send_all();
