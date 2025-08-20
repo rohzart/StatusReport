@@ -15,9 +15,18 @@ if (empty($dates_to_send_csv)) {
 }
 
 $dates = explode(',', $dates_to_send_csv);
-$current_date = date('Y-m-d');
-$current_day = date('d', strtotime($current_date));
-if (!in_array($current_day, $dates)) {
+$current_date = date('d');
+
+// if 'last' is specified, treat it as the last day of the month
+if (in_array('last', $dates)) {
+	$last_day_of_month = date('t');
+	// replace 'last' with the actual last day of the month
+	$dates = array_map(function($date) use ($last_day_of_month) {
+		return $date === 'last' ? $last_day_of_month : $date;
+	}, $dates);
+}
+$current_date = (int)$current_date;
+if (!in_array($current_date, $dates)) {
 	echo "Current date is not in the configured dates for sending the report.\n";
 	exit(0);
 }
