@@ -7,7 +7,21 @@ For more information, please refer to https://unlicense.org
 ## Description
 
 Generates and emails brief billing status reports.
-The report overview page can be accessed by role allowed access to Mantis plugin configuration. The hourly rates and last billed dates are configured there as well.
+
+The report overview page can be accessed by role allowed access to manage plugins. 
+
+The hourly rates and last billed dates are configured in this plugin's configuration.
+
+The default threshold is set to `ADMINISTRATOR`.
+
+```php
+/**
+ * Threshold needed to manage plugins.
+ *
+ * @global int $g_manage_plugin_threshold
+ */
+$g_manage_plugin_threshold = ADMINISTRATOR;
+```
 
 ## Installation
 
