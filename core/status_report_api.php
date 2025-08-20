@@ -12,42 +12,44 @@ function get_project_last_billed_date($project_id, $default_start_date) {
 function get_report() {
     $report = [];
 
-    $default_hourly_rate = config_get('plugin_StatusReport_StatusReport_default_hourly_rate');
+    $ignore_project_ids_csv = plugin_config_get('StatusReport_ignore_project_ids_csv');
+    $default_hourly_rate = plugin_config_get('plugin_StatusReport_StatusReport_default_hourly_rate');
     $default_start_date = date('Y-m-01 00:00:00');
     $projects = project_get_all_rows();
 
     foreach ($projects as $project) {
+        if (isset($project['enabled']) && $project['enabled'] && !in_array($project['id'], explode(',', $ignore_project_ids_csv))) {
+            $hourly_rate = get_project_hourly_rate($project['id'], $default_hourly_rate);
+            $start_date = get_project_last_billed_date($project['id'], $default_start_date);
+            $end_date = date('Y-m-t 23:59:59');
 
-        $hourly_rate = get_project_hourly_rate($project['id'], $default_hourly_rate);
-        $start_date = get_project_last_billed_date($project['id'], $default_start_date);
-        $end_date = date('Y-m-t 23:59:59');
+            $query = "SELECT 
+                    p.id AS project_id,
+                    p.name AS project_name,
+                    ROUND(SUM(bn.time_tracking) / 60, 4) AS total_hours
+                FROM 
+                    bugnote bn
+                JOIN 
+                    bug b ON bn.bug_id = b.id
+                JOIN 
+                    project p ON b.project_id = p.id
+                WHERE 
+                    bn.time_tracking > 0
+                    AND FROM_UNIXTIME(bn.last_modified) BETWEEN " . db_param() . " AND " . db_param() . " AND p.id = " . db_param();
 
-        $query = "SELECT 
-                p.id AS project_id,
-                p.name AS project_name,
-                ROUND(SUM(bn.time_tracking) / 60, 4) AS total_hours
-            FROM 
-                bugnote bn
-            JOIN 
-                bug b ON bn.bug_id = b.id
-            JOIN 
-                project p ON b.project_id = p.id
-            WHERE 
-                bn.time_tracking > 0
-                AND FROM_UNIXTIME(bn.last_modified) BETWEEN " . db_param() . " AND " . db_param() . " AND p.id = " . db_param();
+            $result = db_query($query, array($start_date, $end_date, $project['id']));
 
-        $result = db_query($query, array($start_date, $end_date, $project['id']));
-
-        while ($row = db_fetch_array($result)) {
-            array_push($report, [
-                'project_id' => $row['project_id'],
-                'project_name' => $row['project_name'],
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'total_hours' => $row['total_hours'],
-                'hourly_rate' => $hourly_rate,
-                'cost' => round($row['total_hours'] * $hourly_rate, 2)
-            ]);
+            while ($row = db_fetch_array($result)) {
+                array_push($report, [
+                    'project_id' => $row['project_id'],
+                    'project_name' => $row['project_name'],
+                    'start_date' => $start_date,
+                    'end_date' => $end_date,
+                    'total_hours' => $row['total_hours'],
+                    'hourly_rate' => $hourly_rate,
+                    'cost' => round($row['total_hours'] * $hourly_rate, 2)
+                ]);
+            }
         }
     }
     return $report;
@@ -61,7 +63,7 @@ function email_report_to_admin($report) {
 	}
         
     $template_path = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'admin.txt';
-    $template_path_of_report_section = dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'admin_report_section.txt';
+    $template_path_of_report_section = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'admin_report_section.txt';
 
     // Read the template file
     $template_content = file_get_contents($template_path);
@@ -80,7 +82,7 @@ function email_report_to_admin($report) {
     }
     $body = str_replace('{report_section}', $report_section, $template_content);
     
-    email_store($email, $t_subject, $body );
+    email_store($email, $t_subject, $body);
     email_send_all();
 }
 
