@@ -53,28 +53,46 @@ function get_report() {
     return $report;
 }
 
-function email_report($email, $report) {
-	if($report === null || empty($report)) {
+function email_report_to_admin($report) {
+    $email = plugin_config_get('StatusReport_admin_email');
+
+    if($report === null || empty($report) || $email===null || empty($email)) {
 		return;
 	}
-	
-	if($email){
-		$body = "Monthly Time Tracking Report:\n\n";
-		foreach ($report as $entry) {
-			$body .= "Project: {$entry['project_name']} - Hours: {$entry['total_hours']} - Cost: {$entry['cost']} USD \n";
-		}
+        
+    $template_path = dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'admin.txt';
+    $template_path_of_report_section = dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'admin_report_section.txt';
 
-		$t_subject = 'Monthly Time Report - All Projects';
+    // Read the template file
+    $template_content = file_get_contents($template_path);
+    $template_report_section_content = file_get_contents($template_path_of_report_section);
 
-		email_store($email, $t_subject, $body );
-		email_send_all();
-	}
+    // Email subject and content
+    $t_subject = "Status Report - All Projects";
+
+    foreach ($report as $entry) {
+        // Replace placeholders with actual data
+        $report_section = str_replace(
+            ['{project_name}', '{start_date}', '{end_date}', '{total_hours}', '{hourly_rate}', '${cost}', '{sender_name}'],
+            [$entry['project_name'], date('F d, Y', strtotime($entry['start_date'])), date('F d, Y', strtotime($entry['end_date'])), $entry['total_hours'], $entry['hourly_rate'], '$' . number_format($entry['cost'], 2), 'Stakeholder Name'],
+            $template_report_section_content
+        );
+    }
+    $body = str_replace('{report_section}', $report_section, $template_content);
+    
+    email_store($email, $t_subject, $body );
+    email_send_all();
 }
 
 function email_report_to_stakeholders($report) {
 	if($report === null || empty($report)) {
 		return;
 	}
+
+    $template_path = dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'stakeholders.txt';
+
+    // Read the template file
+    $template_content = file_get_contents($template_path);
 
 	foreach ($report as $entry) {
 		$t_project_id = $entry['project_id'];
@@ -85,15 +103,28 @@ function email_report_to_stakeholders($report) {
 		foreach ($t_stakeholders as $stakeholder) {
 			$t_username = user_get_name($stakeholder['id']);
 			$t_email = user_get_email($stakeholder['id']);
-			$t_subject = "Monthly Time Report - {$entry['project_name']}";
+            $t_project_name = $entry['project_name'];
+            $t_start_date = date('F d, Y', strtotime($entry['start_date']));
+            $t_end_date = date('F d, Y', strtotime($entry['end_date']));
+            $t_total_hours = $entry['total_hours'];
+            $t_hourly_rate = $entry['hourly_rate'];
+            $t_cost = '$' . number_format($entry['cost'], 2);
+            // strtotime($entry['start_date']))
+            // Email subject and content
+            
+            $t_subject = "Status Report - {$t_project_name} (from {$t_start_date} to {$t_end_date})";
+			$body = str_replace(
+                ['{project_name}', '{start_date}', '{end_date}', '{total_hours}', '{hourly_rate}', '${cost}', '{stakeholder_name}'],
+                [$t_project_name, $t_start_date, $t_end_date, $t_total_hours, $t_hourly_rate, $t_cost, $t_username],
+                $template_content
+            );
 
-			$body = "Hello {$t_username},\n\n";
-			$body .= "Monthly Time Tracking Report for project '{$entry['project_name']}':\n";
-			$body .= "Hours: {$entry['total_hours']} | Cost: {$entry['cost']} USD\n";
-
-			email_store($t_email, $t_subject, $body);
+			// email_store($t_email, $t_subject, $body);
+            $email = plugin_config_get('StatusReport_admin_email');
+			email_store($email, $t_subject, $body);
 		}
 	}
 	email_send_all();
 }
+
 ?>
