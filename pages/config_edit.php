@@ -11,6 +11,7 @@ $f_StatusReport_ignore_project_ids_csv  = gpc_get_string('StatusReport_ignore_pr
 plugin_config_set('StatusReport_default_hourly_rate'	    , $f_StatusReport_default_hourly_rate);
 plugin_config_set('StatusReport_dates_to_send_csv'			, $f_StatusReport_dates_to_send_csv);
 plugin_config_set('StatusReport_admin_email'		        , $f_StatusReport_admin_email);
+plugin_config_set('StatusReport_test_mode'				    , gpc_get_bool('StatusReport_test_mode', false));
 plugin_config_set('StatusReport_ignore_project_ids_csv'		, $f_StatusReport_ignore_project_ids_csv);
 
 $project_rates = array();

@@ -125,9 +125,12 @@ function email_report_to_stakeholders($report) {
                     $template_content
                 );
 
-                // email_store($t_email, $t_subject, $body);
-                $email = plugin_config_get('StatusReport_admin_email');
-                email_store($email, $t_subject, $body);
+                $test_mode = plugin_config_get('StatusReport_test_mode');
+                // if test mode is enabled, send email to admin instead of stakeholder
+                if (isset($test_mode) && $test_mode) {
+                    $t_email = plugin_config_get('StatusReport_admin_email');
+                }
+                email_store($t_email, $t_subject, $body);
             }
 		}
 	}
