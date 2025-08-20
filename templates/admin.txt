@@ -2,18 +2,7 @@ Hello,
 
 Please find below the status summary.
 
-<table>
-<tr>
-<th>Project Name</th>
-<th>From </th>
-<th>To</th>
-<th>Hours</th>
-<th>Rate</th>
-<th>Cost (USD)</th>
-</tr>
 {report_section}
-</table>
-
 
 Warm regards.
 

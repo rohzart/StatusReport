@@ -1,8 +1,6 @@
-<tr>
-<td>{project_name}</td>
-<td>{start_date}</td>
-<td>{end_date}</td>
-<td>{total_hours}</td>
-<td>{hourly_rate}</td>
-<td>{cost}</td>
-</tr>
+Name: {project_name}
+From: {start_date}
+Till: {end_date}
+Hours: {total_hours}
+Rate: {hourly_rate}
+Cost: {cost}

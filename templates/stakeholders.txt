@@ -2,8 +2,8 @@ Dear {stakeholder_name},
 
 Please find below the status summary for {project_name}, covering the period from {start_date} to {end_date}:
 
-- Total Hours Logged: {total_hours}
-- Project Cost: ${cost} USD
+- Hours Logged: {total_hours}
+- Cost: ${cost} USD
 
 Warm regards.
 
