@@ -7,8 +7,6 @@ layout_page_header( lang_get( 'StatusReport_plugin_title' ) );
 layout_page_begin( 'status_report.php' );
 
 $report = get_report();
-email_report_to_stakeholders($report);
-email_report_to_admin($report);
 ?>
 
 <div class="col-md-12 col-xs-12">
@@ -45,6 +43,38 @@ email_report_to_admin($report);
 		?>
 		</tbody>
 		</table>
+	</div>
+	<p class="text-muted">This report is generated based on the data available in the system. Please ensure that all project data is up-to-date for accurate reporting. (viz. the configured last billed dates)</p>
+	<h3>Users</h3>
+	<div class="row">
+		<?php
+			foreach ($report as $entry) {
+				$t_project_id = $entry['project_id'];
+				$t_stakeholders = project_get_all_user_rows($t_project_id, STAKEHOLDER);
+				?>
+				<div class="col-md-4">
+				<h4><?php echo htmlspecialchars($entry['project_name']); ?></h2>
+				<?php
+				// Display each stakeholder's username and access level
+				foreach ($t_stakeholders as $stakeholder) {
+					$t_username = user_get_name($stakeholder['id']);
+					$t_access_level = $stakeholder['access_level'];
+					$access_level_name = get_enum_element('access_levels', $t_access_level);
+					$access_level_name == "stakeholder"
+					?>
+					
+					<p>
+						<?php 
+						echo $t_username . ": " . $access_level_name;
+						?>
+					</p>
+					<?php
+				}
+				?>
+				</div>
+				<?php
+			}
+		?>
 	</div>
 </div>
 
