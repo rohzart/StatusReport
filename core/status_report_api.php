@@ -75,7 +75,7 @@ function email_report_to_admin($report) {
     foreach ($report as $entry) {
         // Replace placeholders with actual data
         $report_section = str_replace(
-            ['{project_name}', '{start_date}', '{end_date}', '{total_hours}', '{hourly_rate}', '${cost}', '{sender_name}'],
+            ['{project_name}', '{start_date}', '{end_date}', '{total_hours}', '{hourly_rate}', '{cost}', '{sender_name}'],
             [$entry['project_name'], date('F d, Y', strtotime($entry['start_date'])), date('F d, Y', strtotime($entry['end_date'])), $entry['total_hours'], $entry['hourly_rate'], '$' . number_format($entry['cost'], 2), 'Stakeholder Name'],
             $template_report_section_content
         );
