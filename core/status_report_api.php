@@ -104,7 +104,9 @@ function email_report_to_stakeholders($report) {
 
 		foreach ($t_stakeholders as $stakeholder) {
             // confirm the user has only stakeholder access
-            // if (access_get_global_level($stakeholder['id']) < STAKEHOLDER) {
+            $t_access_level = $stakeholder['access_level'];
+            $access_level_name = get_enum_element('access_levels', $t_access_level);
+            if ($access_level_name === "stakeholder") {
                 $t_username = user_get_name($stakeholder['id']);
                 $t_email = user_get_email($stakeholder['id']);
                 $t_project_name = $entry['project_name'];
@@ -126,7 +128,7 @@ function email_report_to_stakeholders($report) {
                 // email_store($t_email, $t_subject, $body);
                 $email = plugin_config_get('StatusReport_admin_email');
                 email_store($email, $t_subject, $body);
-            // }
+            }
 		}
 	}
 	email_send_all();
