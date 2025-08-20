@@ -79,6 +79,10 @@ print_manage_menu();
 		<td>
 			<input type="text" name="StatusReport_dates_to_send_csv" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_dates_to_send_csv' )?>">
 			<div class="help-block">
+				<?php
+					$last_dispatch = plugin_config_get('StatusReport_last_report_dispatch', null) ?? 'Never';
+				?>
+				<p><?php echo lang_get( 'StatusReport_last_report_dispatch' ) . ": " . $last_dispatch ?></p>
 				<?php echo lang_get( 'StatusReport_dates_to_send_csv_description' ) ?>
 			</div>
 	</td>

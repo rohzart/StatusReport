@@ -10,6 +10,7 @@ $s_StatusReport_Project_Label           = 'Project';
 $s_StatusReport_Hourly_Rate             = 'Hourly Rate';
 $s_StatusReport_Last_Billed_Date        = 'Last Billed';
 $s_StatusReport_dates_to_send_csv       = 'Days of the month to send reports (csv)';
+$s_StatusReport_last_report_dispatch    = 'Last Dispatched';
 $s_StatusReport_dates_to_send_csv_description = 'For the last day of the month, you may use "last" as a token.';
 $s_StatusReport_ignore_project_ids_csv  = 'Ignore project ids (csv)';
 $s_StatusReport_admin_email             = 'AdminEmail';
