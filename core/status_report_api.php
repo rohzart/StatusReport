@@ -60,7 +60,7 @@ function email_report_to_admin($report) {
 		return;
 	}
         
-    $template_path = dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'admin.txt';
+    $template_path = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'admin.txt';
     $template_path_of_report_section = dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'admin_report_section.txt';
 
     // Read the template file
@@ -89,7 +89,7 @@ function email_report_to_stakeholders($report) {
 		return;
 	}
 
-    $template_path = dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'stakeholders.txt';
+    $template_path = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'stakeholders.txt';
 
     // Read the template file
     $template_content = file_get_contents($template_path);
