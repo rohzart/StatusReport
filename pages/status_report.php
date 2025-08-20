@@ -7,6 +7,8 @@ layout_page_header( lang_get( 'StatusReport_plugin_title' ) );
 layout_page_begin( 'status_report.php' );
 
 $report = get_report();
+email_report_to_stakeholders($report);
+email_report_to_admin($report);
 ?>
 
 <div class="col-md-12 col-xs-12">
