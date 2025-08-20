@@ -3,4 +3,5 @@ From: {start_date}
 Till: {end_date}
 Hours: {total_hours}
 Rate: {hourly_rate}
-Cost: {cost}
+Cost: {cost} USD
+---
