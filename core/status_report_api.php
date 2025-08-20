@@ -103,27 +103,30 @@ function email_report_to_stakeholders($report) {
 		$t_stakeholders = project_get_all_user_rows($t_project_id, STAKEHOLDER);
 
 		foreach ($t_stakeholders as $stakeholder) {
-			$t_username = user_get_name($stakeholder['id']);
-			$t_email = user_get_email($stakeholder['id']);
-            $t_project_name = $entry['project_name'];
-            $t_start_date = date('F d, Y', strtotime($entry['start_date']));
-            $t_end_date = date('F d, Y', strtotime($entry['end_date']));
-            $t_total_hours = $entry['total_hours'];
-            $t_hourly_rate = $entry['hourly_rate'];
-            $t_cost = '$' . number_format($entry['cost'], 2);
-            // strtotime($entry['start_date']))
-            // Email subject and content
-            
-            $t_subject = "Status Report - {$t_project_name} (from {$t_start_date} to {$t_end_date})";
-			$body = str_replace(
-                ['{project_name}', '{start_date}', '{end_date}', '{total_hours}', '{hourly_rate}', '${cost}', '{stakeholder_name}'],
-                [$t_project_name, $t_start_date, $t_end_date, $t_total_hours, $t_hourly_rate, $t_cost, $t_username],
-                $template_content
-            );
+            // confirm the user has only stakeholder access
+            if (access_get_global_level($stakeholder['id']) <= STAKEHOLDER) {
+                $t_username = user_get_name($stakeholder['id']);
+                $t_email = user_get_email($stakeholder['id']);
+                $t_project_name = $entry['project_name'];
+                $t_start_date = date('F d, Y', strtotime($entry['start_date']));
+                $t_end_date = date('F d, Y', strtotime($entry['end_date']));
+                $t_total_hours = $entry['total_hours'];
+                $t_hourly_rate = $entry['hourly_rate'];
+                $t_cost = '$' . number_format($entry['cost'], 2);
+                // strtotime($entry['start_date']))
+                // Email subject and content
+                
+                $t_subject = "Status Report - {$t_project_name} (from {$t_start_date} to {$t_end_date})";
+                $body = str_replace(
+                    ['{project_name}', '{start_date}', '{end_date}', '{total_hours}', '{hourly_rate}', '${cost}', '{stakeholder_name}'],
+                    [$t_project_name, $t_start_date, $t_end_date, $t_total_hours, $t_hourly_rate, $t_cost, $t_username],
+                    $template_content
+                );
 
-			// email_store($t_email, $t_subject, $body);
-            $email = plugin_config_get('StatusReport_admin_email');
-			email_store($email, $t_subject, $body);
+                // email_store($t_email, $t_subject, $body);
+                $email = plugin_config_get('StatusReport_admin_email');
+                email_store($email, $t_subject, $body);
+            }
 		}
 	}
 	email_send_all();
