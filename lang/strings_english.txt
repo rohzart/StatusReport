@@ -6,8 +6,14 @@ $s_StatusReport_plugin_desc 			= 'Email regular status reports.';
 
 $s_StatusReport_default_hourly_rate     = 'Default Hourly Rate';
 $s_StatusReport_project_hourly_rates_and_last_billed_dates    = 'Hourly Rate and Last Billed Date per Project';
-$s_StatusReport_dates_to_send_csv        = 'Days of the month to send reports (csv)';
+$s_StatusReport_Project_Label           = 'Project';
+$s_StatusReport_Hourly_Rate             = 'Hourly Rate';
+$s_StatusReport_Last_Billed_Date        = 'Last Billed';
+$s_StatusReport_dates_to_send_csv       = 'Days of the month to send reports (csv)';
+$s_StatusReport_dates_to_send_csv_description = 'For the last day of the month, you may use "last" as a token.';
 $s_StatusReport_ignore_project_ids_csv  = 'Ignore project ids (csv)';
 $s_StatusReport_admin_email             = 'AdminEmail';
+$s_StatusReport_test_mode               = 'Test Mode';
+$s_StatusReport_test_mode_description   = 'If enabled, the emails triggered via cron job will dispatch only to the configured admin email instead of the stakeholders';
 
 $s_StatusReport_change_configuration    = 'Save';

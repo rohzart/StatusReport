@@ -38,22 +38,37 @@ print_manage_menu();
         <?php echo lang_get( 'StatusReport_project_hourly_rates_and_last_billed_dates' ) ?>
     </td>
     <td>
+		<table class="table table-bordered table-condensed" style="width: auto;">
+		<thead>
+			<tr>
+				<th><?php echo lang_get( 'StatusReport_Project_Label' ) ?></th>
+				<th><?php echo lang_get( 'StatusReport_Hourly_Rate' ) ?></th>
+				<th><?php echo lang_get( 'StatusReport_Last_Billed_Date' ) ?></th>
+			</tr>
+		</thead>
+		<tbody>
         <?php
+   		$ignore_project_ids_csv = plugin_config_get('StatusReport_ignore_project_ids_csv');
         $projects = project_get_all_rows();
         foreach ($projects as $project) {
-            $project_rates = plugin_config_get('StatusReport_project_hourly_rates');
-            $rate = isset($project_rates[$project['id']]) ? $project_rates[$project['id']] : '';
+        	if (isset($project['enabled']) && $project['enabled'] && !in_array($project['id'], explode(',', $ignore_project_ids_csv))) {
+				$project_rates = plugin_config_get('StatusReport_project_hourly_rates');
+				$rate = isset($project_rates[$project['id']]) ? $project_rates[$project['id']] : '';
 
-            $project_last_billed_dates = plugin_config_get('StatusReport_project_last_billed_dates');
-            $billed_date = isset($project_last_billed_dates[$project['id']]) ? $project_last_billed_dates[$project['id']] : '';
-            
-			echo '<div class="project-rate">';
-            echo '<label>' . $project['name'] . ':</label> ';
-            echo '<input type="text" name="project_rate_' . $project['id'] . '" size="10" value="' . $rate . '">';
-			echo '<input type="date" name="project_last_billed_date_' . $project['id'] . '" size="10" value="' . $billed_date . '">';
-            echo '</div>';
+				$project_last_billed_dates = plugin_config_get('StatusReport_project_last_billed_dates');
+				$billed_date = isset($project_last_billed_dates[$project['id']]) ? $project_last_billed_dates[$project['id']] : '';
+				?>
+			<tr>
+				<td class="text-nowrap"><?php echo string_display_line($project['name'] . ' (' . $project['id'] . ')') ?></td>
+				<td class="text-nowrap"><input type="text" name="project_rate_<?php echo $project['id'] ?>" size="10" maxlength="10" value="<?php echo $rate ?>"></td>
+				<td class="text-nowrap"><input type="date" name="project_last_billed_date_<?php echo $project['id'] ?>" size="10" value="<?php echo $billed_date ?>"></td>
+			</tr>
+				<?php
+			}
         }
         ?>
+		</tbody>
+		</table>
     </td>
     <td></td>
 </tr>
@@ -63,6 +78,25 @@ print_manage_menu();
 	</td>
 		<td>
 			<input type="text" name="StatusReport_dates_to_send_csv" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_dates_to_send_csv' )?>">
+			<div class="help-block">
+				<?php echo lang_get( 'StatusReport_dates_to_send_csv_description' ) ?>
+			</div>
+	</td>
+	</td><td>
+</tr>
+
+<tr>
+	<td class="category">
+		<?php echo lang_get( 'StatusReport_test_mode' ) ?>
+	</td>
+		<td>
+			<?php 
+			$checked = plugin_config_get('StatusReport_test_mode', false);
+			?> 
+			<input type="checkbox" name="StatusReport_test_mode" <?php echo $checked ? 'checked' : '' ?> />
+			<div class="help-block">
+			<?php echo lang_get( 'StatusReport_test_mode_description' ) ?>
+			</div>
 	</td>
 	</td><td>
 </tr>
