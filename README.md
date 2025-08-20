@@ -7,6 +7,7 @@ For more information, please refer to https://unlicense.org
 ## Description
 
 Generates and emails brief billing status reports.
+The report overview page can be accessed by role allowed access to Mantis plugin configuration. The hourly rates and last billed dates are configured there as well.
 
 ## Installation
 
