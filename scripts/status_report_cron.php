@@ -6,7 +6,7 @@ if( php_sapi_name() != 'cli' ) {
 }
 
 require_once( dirname( __FILE__, 4 ) . DIRECTORY_SEPARATOR . 'core.php' );
-require_once(dirname( __FILE__, 2 ) . DIRECTORY_SEPARATOR . 'core/status_report_api.php');
+require_once( dirname( __FILE__, 2 ) . DIRECTORY_SEPARATOR . 'core/status_report_api.php' );
 
 $dates_to_send_csv = plugin_config_get('StatusReport_dates_to_send_csv');
 if (empty($dates_to_send_csv)) {
