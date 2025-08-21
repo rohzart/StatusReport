@@ -80,7 +80,16 @@ print_manage_menu();
 			<input type="text" name="StatusReport_dates_to_send_csv" size="50" maxlength="50" value="<?php echo plugin_config_get( 'StatusReport_dates_to_send_csv' )?>">
 			<div class="help-block">
 				<?php
-					$last_dispatch = plugin_config_get('StatusReport_last_report_dispatch', null) ?? 'Never';
+					$last_dispatch = plugin_config_get('StatusReport_last_report_dispatch', null);
+					if ($last_dispatch !== null) {
+						$user_id = auth_get_current_user_id();
+						$user_timezone = user_pref_get_pref( $user_id, 'timezone' );
+						$date = new DateTime('@' . $last_dispatch);
+						$date->setTimezone(new DateTimeZone($user_timezone));
+						$last_dispatch = $date->format('Y-m-d H:i:s') . ' (' . $date->format('T') . ')';
+					} else {
+						$last_dispatch = 'Never';
+					}
 				?>
 				<p><?php echo lang_get( 'StatusReport_last_report_dispatch' ) . ": " . $last_dispatch ?></p>
 				<?php echo lang_get( 'StatusReport_dates_to_send_csv_description' ) ?>
