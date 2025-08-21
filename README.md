@@ -50,7 +50,11 @@ $g_access_levels_enum_string = '10:viewer,25:reporter,35:stakeholder,40:updater,
 
 ### Cron job
 
-Set it to once a week/month or as per your liking.
+The plugin is hooked to Mantis' cron job event called `EVENT_CRONJOB` to dispatch the email reports.
+
+Alternatively, you may run the cron job manually from the command line:
+
+Set it to once a week/month, any frequency as per your liking.
 ```
 /usr/local/bin/php /home2/bearso19/public_html/office/mantis/plugins/StatusReport/scripts/status_report_cron.php
 ```
