@@ -58,28 +58,10 @@ class StatusReportPlugin extends MantisPlugin {
 
 	function cronjob() {
 		return array(
-			'cronjob' => $this->status_report_cron(),
+			'cronjob' => require_once( dirname( __FILE__, 1 ) . DIRECTORY_SEPARATOR . 'scripts/status_report_cron.php' ),
 			'frequency' => 'daily',
 			'description' => lang_get( 'StatusReport_cronjob_desc' )
 		);
-	}
-
-	function status_report_cron(){
-		// Get the last dispatch timestamp from plugin config
-		$last_dispatch = plugin_config_get('StatusReport_last_report_dispatch', null, false, null);
-
-		// Current time and date
-		$now = time();
-
-		// Dispatch only if no previous dispatch or more than 24 hours have passed
-		if ($last_dispatch === null || ($now - $last_dispatch) >= 86400) {  // 86400 seconds = 24 hours
-			
-			// Your report dispatch logic here
-			require_once( dirname( __FILE__, 1 ) . DIRECTORY_SEPARATOR . 'scripts/status_report_cron.php' );
-
-			// Update the last dispatch time in config
-			plugin_config_set('StatusReport_last_report_dispatch', $now);
-		}
 	}
 
 }
