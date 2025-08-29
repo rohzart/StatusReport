@@ -21,7 +21,9 @@ function get_report() {
         if (isset($project['enabled']) && $project['enabled'] && !in_array($project['id'], explode(',', $ignore_project_ids_csv))) {
             $hourly_rate = get_project_hourly_rate($project['id'], $default_hourly_rate);
             $start_date = get_project_last_billed_date($project['id'], $default_start_date);
-            $end_date = date('Y-m-t 23:59:59');
+            // the end date should be the current date
+            // if we keep it the last day of the month, the billing report might read as it covers all the costs untill the end of the month
+            $end_date = date('Y-m-d H:i:s');
 
             $query = "SELECT 
                     p.id AS project_id,
