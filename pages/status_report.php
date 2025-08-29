@@ -44,7 +44,10 @@ $report = get_report();
 		</tbody>
 		</table>
 	</div>
-	<p class="text-muted">This report is generated based on the data available in the system. Please ensure that all project data is up-to-date for accurate reporting. (viz. the configured last billed dates)</p>
+	<p class="text-muted">
+		This report is generated based on the data available in the system. Please ensure that all project data is up-to-date for accurate reporting. (viz. the configured last billed dates)
+		<a href="<?php echo plugin_page( 'config.php' ) ?>" class="btn btn-primary btn-sm btn-white btn-round">Configure</a>
+	</p>
 	<h3>Users</h3>
 	<div class="row">
 		<?php
