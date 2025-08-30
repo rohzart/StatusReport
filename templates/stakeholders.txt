@@ -1,6 +1,6 @@
 Dear {stakeholder_name},
 
-Please find below the status summary for {project_name}, covering the period from {start_date} to {end_date}:
+Please find below the status summary for {project_name}, covering the period from {start_date} to {end_date}.
 
 - Hours Logged: {total_hours}
 - Cost: ${cost} USD

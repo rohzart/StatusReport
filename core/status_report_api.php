@@ -1,17 +1,24 @@
 <?php
+
+require_once( 'datetimehelpers.php' );
+
+function convertUtcToTimezone(string $utc_datetime, string $user_id): string {
+    $user_timezone = user_pref_get_pref($user_id, 'timezone');
+    $dt = new DateTime($utc_datetime, new DateTimeZone('UTC'));
+    $dt->setTimezone(new DateTimeZone($user_timezone));
+    return $dt->format('F d, Y H:i:s T (P)');
+}
+
+
 function get_project_hourly_rate($project_id, $default_rate) {
     $project_rates = plugin_config_get('StatusReport_project_hourly_rates');
     return isset($project_rates[$project_id]) ? $project_rates[$project_id] : $default_rate;
 }
 
-function get_project_last_billed_date($project_id, $default_start_date) {
-    $project_last_billed_dates = plugin_config_get('StatusReport_project_last_billed_dates');
-    return isset($project_last_billed_dates[$project_id]) ? date('Y-m-d', strtotime($project_last_billed_dates[$project_id])) : $default_start_date;
-}
-
 function get_report() {
     $report = [];
 
+    $project_last_billed_dates = plugin_config_get('StatusReport_project_last_billed_dates');
     $ignore_project_ids_csv = plugin_config_get('StatusReport_ignore_project_ids_csv');
     $default_hourly_rate = plugin_config_get('plugin_StatusReport_StatusReport_default_hourly_rate');
     $default_start_date = date('Y-m-01 00:00:00');
@@ -20,10 +27,10 @@ function get_report() {
     foreach ($projects as $project) {
         if (isset($project['enabled']) && $project['enabled'] && !in_array($project['id'], explode(',', $ignore_project_ids_csv))) {
             $hourly_rate = get_project_hourly_rate($project['id'], $default_hourly_rate);
-            $start_date = get_project_last_billed_date($project['id'], $default_start_date);
+            $start_date = unixtimeToDatetime($project_last_billed_dates[$project['id']], 'UTC', 'Y-m-d H:i:s', $default_start_date);
             // the end date should be the current date
             // if we keep it the last day of the month, the billing report might read as it covers all the costs untill the end of the month
-            $end_date = date('Y-m-d H:i:s');
+            $end_date = unixtimeToDatetime(time(), 'UTC', 'Y-m-d H:i:s', date('Y-m-d H:i:s'));
 
             $query = "SELECT 
                     p.id AS project_id,
@@ -78,7 +85,7 @@ function email_report_to_admin($report) {
         // Replace placeholders with actual data
         $report_section .= str_replace(
             ['{project_name}', '{start_date}', '{end_date}', '{total_hours}', '{hourly_rate}', '{cost}', '{sender_name}'],
-            [$entry['project_name'], date('F d, Y', strtotime($entry['start_date'])), date('F d, Y', strtotime($entry['end_date'])), $entry['total_hours'], $entry['hourly_rate'], '$' . number_format($entry['cost'], 2), 'Stakeholder Name'],
+            [$entry['project_name'], $entry['start_date'], $entry['end_date'], $entry['total_hours'], $entry['hourly_rate'], '$' . number_format($entry['cost'], 2), 'Stakeholder Name'],
             $template_report_section_content
         );
     }
@@ -112,8 +119,8 @@ function email_report_to_stakeholders($report) {
                 $t_username = user_get_name($stakeholder['id']);
                 $t_email = user_get_email($stakeholder['id']);
                 $t_project_name = $entry['project_name'];
-                $t_start_date = date('F d, Y', strtotime($entry['start_date']));
-                $t_end_date = date('F d, Y', strtotime($entry['end_date']));
+                $t_start_date = convertUtcToTimezone($entry['start_date'], $stakeholder['id']);
+                $t_end_date = convertUtcToTimezone($entry['end_date'], $stakeholder['id']);
                 $t_total_hours = $entry['total_hours'];
                 $t_hourly_rate = $entry['hourly_rate'];
                 $t_cost = '$' . number_format($entry['cost'], 2);

@@ -58,3 +58,11 @@ Set it to once a week/month, any frequency as per your liking.
 ```
 /usr/local/bin/php /home2/bearso19/public_html/office/mantis/plugins/StatusReport/scripts/status_report_cron.php
 ```
+
+### Timezones
+
+- Your PC's time zone should match what's set in the preference.
+- The emails dispatched to the stakeholders have all timestamps following their timezone preference.
+- The plugin's admin email doesn't necessarily have any association with mantis users; the timestamps in reports dispatched to that email follow UTC.
+- The timestamps in the report pages, for the sake of consistency across different users, also follow UTC.
+- But for the sake of conveniency, when setting the last billed dates in the config, the logged in users timezone preferences are observerd.

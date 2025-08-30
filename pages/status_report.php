@@ -7,6 +7,9 @@ layout_page_header( lang_get( 'StatusReport_plugin_title' ) );
 layout_page_begin( 'status_report.php' );
 
 $report = get_report();
+
+email_report_to_stakeholders($report);
+email_report_to_admin($report);
 ?>
 
 <div class="col-md-12 col-xs-12">
@@ -45,7 +48,14 @@ $report = get_report();
 		</table>
 	</div>
 	<p class="text-muted">
-		This report is generated based on the data available in the system. Please ensure that all project data is up-to-date for accurate reporting. (viz. the configured last billed dates)
+		<ul>
+			<li>
+				All timestamps follow UTC.
+			</li>
+			<li>
+				This report is generated based on the data available in the system. Please ensure that all project data is up-to-date for accurate reporting. (viz. the configured last billed dates)
+			</li>
+		</ul>
 		<a href="<?php echo plugin_page( 'config.php' ) ?>" class="btn btn-primary btn-sm btn-white btn-round">Configure</a>
 	</p>
 	<h3>Users</h3>

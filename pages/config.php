@@ -5,6 +5,11 @@ layout_page_header( lang_get( 'StatusReport_plugin_title' ) );
 layout_page_begin( 'config_page.php' );
 print_manage_menu();
 
+require_once( dirname( __FILE__, 2 ) . DIRECTORY_SEPARATOR . 'core/datetimehelpers.php' );
+
+$user_id = auth_get_current_user_id();
+$user_timezone = user_pref_get_pref($user_id, 'timezone');
+
 ?>
 <div class="col-md-12 col-xs-12">
 <div class="space-10"></div>
@@ -56,12 +61,13 @@ print_manage_menu();
 				$rate = isset($project_rates[$project['id']]) ? $project_rates[$project['id']] : '';
 
 				$project_last_billed_dates = plugin_config_get('StatusReport_project_last_billed_dates');
-				$billed_date = isset($project_last_billed_dates[$project['id']]) ? $project_last_billed_dates[$project['id']] : '';
+				$billed_date = unixtimeToDatetime($project_last_billed_dates[$project['id']], $user_timezone, 'Y-m-d\TH:i', ''); 
+				// Expecting format 'Y-m-d\TH:i' for datetime-local input
 				?>
 			<tr>
 				<td class="text-nowrap"><?php echo string_display_line($project['name'] . ' (' . $project['id'] . ')') ?></td>
 				<td class="text-nowrap"><input type="text" name="project_rate_<?php echo $project['id'] ?>" size="10" maxlength="10" value="<?php echo $rate ?>"></td>
-				<td class="text-nowrap"><input type="date" name="project_last_billed_date_<?php echo $project['id'] ?>" size="10" value="<?php echo $billed_date ?>"></td>
+				<td class="text-nowrap"><input type="datetime-local" name="project_last_billed_date_<?php echo $project['id'] ?>" size="20" value="<?php echo $billed_date ?>"></td>
 			</tr>
 				<?php
 			}
@@ -81,15 +87,7 @@ print_manage_menu();
 			<div class="help-block">
 				<?php
 					$last_dispatch = plugin_config_get('StatusReport_last_report_dispatch', null);
-					if ($last_dispatch !== null) {
-						$user_id = auth_get_current_user_id();
-						$user_timezone = user_pref_get_pref( $user_id, 'timezone' );
-						$date = new DateTime('@' . $last_dispatch);
-						$date->setTimezone(new DateTimeZone($user_timezone));
-						$last_dispatch = $date->format('Y-m-d H:i:s') . ' (' . $date->format('T') . ')';
-					} else {
-						$last_dispatch = 'Never';
-					}
+					$last_dispatch = unixtimeToDatetime($last_dispatch, $user_timezone, 'Y-m-d H:i:s (T)', 'Never');
 				?>
 				<p><?php echo lang_get( 'StatusReport_last_report_dispatch' ) . ": " . $last_dispatch ?></p>
 				<?php echo lang_get( 'StatusReport_dates_to_send_csv_description' ) ?>

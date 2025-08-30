@@ -6,4 +6,6 @@ Please find below the status summary.
 
 Warm regards.
 
-Note: This is an auto-generated email and was sent from an unmonitored address. Please do not reply.
+Note: 
+- All timestamps follow UTC.
+- This is an auto-generated email and was sent from an unmonitored address. Please do not reply.
